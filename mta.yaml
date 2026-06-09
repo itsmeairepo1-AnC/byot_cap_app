@@ -1,0 +1,76 @@
+_schema-version: "3.1"
+ID: byot-cap-app
+version: 1.0.0
+description: SAP CAP Grounding Chatbot
+
+parameters:
+  enable-parallel-deployments: true
+
+build-parameters:
+  before-all:
+    - builder: custom
+      commands:
+        - npx cds build --production
+
+modules:
+  # ── CAP Node.js backend ─────────────────────────────────────────────
+  - name: byot-cap-app-srv
+    type: nodejs
+    path: gen/srv
+    parameters:
+      buildpack: nodejs_buildpack
+      readiness-health-check-type: http
+      readiness-health-check-http-endpoint: /health
+    properties:
+      EXIT: 1
+    requires:
+      - name: byot-cap-app-xsuaa
+      - name: byot-cap-app-dest
+    provides:
+      - name: srv-api
+        properties:
+          srv-url: ${default-url}
+
+  # ── App Router ───────────────────────────────────────────────────────
+  - name: byot-cap-app-approuter
+    type: approuter.nodejs
+    path: app/
+    parameters:
+      keep-existing-routes: true
+      disk-quota: 256M
+      memory: 256M
+    requires:
+      - name: byot-cap-app-xsuaa
+      - name: srv-api
+        group: destinations
+        properties:
+          name: srv-api
+          url: ~{srv-url}
+          forwardAuthToken: true
+      - name: byot-cap-app-dest
+        group: destinations
+        properties:
+          name: python-api
+          url: ~{python-api-url}
+          forwardAuthToken: false
+
+resources:
+  # ── XSUAA (authentication) ───────────────────────────────────────────
+  - name: byot-cap-app-xsuaa
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: xsuaa
+      service-plan: application
+      path: ./xs-security.json
+      config:
+        xsappname: byot-cap-app-${org}-${space}
+        tenant-mode: dedicated
+
+  # ── Destination service (to reach Python API backend) ───────────────
+  - name: byot-cap-app-dest
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: destination
+      service-plan: lite
+    properties:
+      python-api-url: ~{python-api-url}

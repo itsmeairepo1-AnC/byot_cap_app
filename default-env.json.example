@@ -1,0 +1,30 @@
+{
+  "VCAP_SERVICES": {
+    "destination": [
+      {
+        "label": "destination",
+        "plan": "lite",
+        "name": "byot-cap-app-dest",
+        "credentials": {
+          "clientid": "REPLACE_WITH_DEST_CLIENTID",
+          "clientsecret": "REPLACE_WITH_DEST_CLIENTSECRET",
+          "uri": "REPLACE_WITH_DEST_URI",
+          "url": "REPLACE_WITH_DEST_AUTH_URL"
+        }
+      }
+    ],
+    "xsuaa": [
+      {
+        "label": "xsuaa",
+        "plan": "application",
+        "name": "byot-cap-app-xsuaa",
+        "credentials": {
+          "clientid": "REPLACE_WITH_XSUAA_CLIENTID",
+          "clientsecret": "REPLACE_WITH_XSUAA_CLIENTSECRET",
+          "url": "REPLACE_WITH_XSUAA_AUTH_URL",
+          "xsappname": "byot-cap-app"
+        }
+      }
+    ]
+  }
+}

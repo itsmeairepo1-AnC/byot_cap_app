@@ -1,0 +1,57 @@
+<mvc:View controllerName="chatuiapp.controller.ChatView"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core">
+
+    <Page id="chatPage"
+        showHeader="true"
+        class="chatContainer">
+
+        <customHeader>
+            <Bar>
+                <contentLeft>
+                    <HBox alignItems="Center">
+                        <core:Icon src="sap-icon://da" class="sapUiSmallMarginEnd" />
+                        <Title text="{i18n>appTitle}" level="H4" />
+                    </HBox>
+                </contentLeft>
+            </Bar>
+        </customHeader>
+
+        <content>
+            <ScrollContainer
+                id="chatScrollContainer"
+                height="100%"
+                width="100%"
+                vertical="true"
+                horizontal="false"
+                class="chatMessages">
+
+                <VBox id="messageList" class="sapUiSmallMargin" />
+
+            </ScrollContainer>
+        </content>
+
+        <footer>
+            <Toolbar class="chatComposer">
+                <TextArea
+                    id="chatInput"
+                    value="{chat>/inputValue}"
+                    placeholder="{i18n>inputPlaceholder}"
+                    growing="true"
+                    growingMaxLines="5"
+                    rows="1"
+                    width="100%"
+                    enabled="{= !${chat>/busy}}"
+                    class="sapUiSmallMarginEnd" />
+                <Button
+                    icon="sap-icon://paper-plane"
+                    type="Emphasized"
+                    press=".onSend"
+                    enabled="{= !${chat>/busy} &amp;&amp; !!${chat>/inputValue}}"
+                    tooltip="{i18n>sendButton}" />
+            </Toolbar>
+        </footer>
+
+    </Page>
+</mvc:View>

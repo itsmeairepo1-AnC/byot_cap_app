@@ -1,0 +1,43 @@
+{
+  "name": "byot-cap-app",
+  "version": "1.0.0",
+  "description": "SAP CAP application — Grounding chatbot only.",
+  "dependencies": {
+    "@sap-cloud-sdk/connectivity": "^4.6.0",
+    "@sap-cloud-sdk/http-client": "^4.6.0",
+    "@sap/cds": "^9.8.5",
+    "@sap/xssec": "^4.13.0",
+    "express": "^4.22.1",
+    "passport": "^0.7.0"
+  },
+  "devDependencies": {
+    "@cap-js/sqlite": "^2",
+    "cds-plugin-ui5": "^0.13.0"
+  },
+  "scripts": {
+    "start": "cds-serve",
+    "watch": "cds watch --open chat_ui/index.html?sap-ui-xx-viewCache=false --livereload false"
+  },
+  "private": true,
+  "cds": {
+    "requires": {
+      "auth": {
+        "[production]": {
+          "kind": "xsuaa"
+        },
+        "[development]": {
+          "kind": "mocked",
+          "users": {
+            "test": {
+              "password": "test",
+              "roles": []
+            }
+          }
+        }
+      }
+    }
+  },
+  "workspaces": [
+    "app/*"
+  ]
+}
